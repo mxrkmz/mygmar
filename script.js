@@ -17,12 +17,21 @@ let maxPlayers = 3;
 let isSolved = false;
 let resetVoted = false;
 
-// 1. 인원 모드 선택
 document.querySelectorAll('.mode-btn').forEach(btn => {
   btn.addEventListener('click', (e) => {
-    maxPlayers = parseInt(e.target.dataset.max);
-    gameDoc.set({ maxPlayers: maxPlayers }, { merge: true });
-    showRoleButtons();
+    const selectedMax = parseInt(e.target.dataset.max);
+    maxPlayers = selectedMax;
+    document.getElementById('modeScreen').style.display = 'none';
+    showRoleButtons(); 
+    gameDoc.set({ 
+      maxPlayers: selectedMax,
+      names: {},
+      words: {},
+      solved: new Array(selectedMax).fill(false),
+      chat: [`📢 ${selectedMax}인용 게임이 시작되었습니다!`],
+      currentTurn: 0,
+      resetVotes: []
+    }, { merge: false });
   });
 });
 
@@ -35,7 +44,6 @@ function showRoleButtons() {
     btn.onclick = () => selectRole(i);
     container.appendChild(btn);
   }
-  document.getElementById('modeScreen').style.display = 'none';
   document.getElementById('setupScreen').style.display = 'block';
 }
 
@@ -59,21 +67,15 @@ function startListening() {
   gameDoc.onSnapshot((doc) => {
     const data = doc.data();
     if (!data) return;
-
     maxPlayers = data.maxPlayers || 3;
     const names = data.names || {};
     const words = data.words || {};
     const solved = data.solved || new Array(maxPlayers).fill(false);
     const turn = data.currentTurn || 0;
-
-    // 다시하기 로직
     if (data.resetVotes && data.resetVotes.length >= maxPlayers) {
-      gameDoc.set({ chat: [], resetVotes: [], solved: new Array(maxPlayers).fill(false), names: {}, words: {}, currentTurn: 0, maxPlayers: maxPlayers });
       location.reload();
       return;
     }
-
-    // 제시어 입력 단계 체크
     const wordCount = Object.keys(words).length;
     if (wordCount < maxPlayers) {
       document.getElementById('wordScreen').style.display = 'block';
@@ -81,18 +83,14 @@ function startListening() {
     } else {
       document.getElementById('wordScreen').style.display = 'none';
       document.getElementById('gameScreen').style.display = 'block';
-
-      // 현황판 동적 생성
       const hRow = document.getElementById('headerRow');
       const sRow = document.getElementById('statusRow');
       hRow.innerHTML = ''; sRow.innerHTML = '';
-
       for(let i=0; i<maxPlayers; i++) {
         const th = document.createElement('th');
         th.innerText = (i === myRole) ? `나(${myName})` : (names[i] || '입력중');
         th.style.border = "1px solid #ccc"; th.style.padding = "5px";
         hRow.appendChild(th);
-
         const td = document.createElement('td');
         if (i !== myRole) {
           td.innerText = words[i] || "입력중";
@@ -104,26 +102,20 @@ function startListening() {
         td.style.border = "1px solid #ccc"; td.style.padding = "5px";
         sRow.appendChild(td);
       }
-
-      // 턴 및 채팅 업데이트 (기존 로직과 동일)
       document.getElementById('turnIndicator').innerText = (turn === myRole) ? "★나의 차례★" : `${names[turn] || '...'}님의 차례`;
       const isMyTurn = (turn === myRole && !solved[myRole]);
+      document.getElementById('questionInput').disabled = !isMyTurn;
       document.getElementById('sendQuestionBtn').disabled = !isMyTurn;
+      document.getElementById('answerInput').disabled = !isMyTurn;
       document.getElementById('sendAnswerBtn').disabled = !isMyTurn;
-
       const chatBox = document.getElementById('chatBox');
       chatBox.innerHTML = (data.chat || []).map(msg => `<div>${msg}</div>`).join('');
       chatBox.scrollTop = chatBox.scrollHeight;
-      
-      if (solved.every(v => v === true)) {
-         gameDoc.update({ chat: firebase.firestore.FieldValue.arrayUnion(`📢 <strong>모두 정답! 다시하시겠어요?</strong>`) });
-      }
       document.getElementById('resetStatus').innerText = `다시하기 투표: ${data.resetVotes ? data.resetVotes.length : 0}/${maxPlayers}`;
     }
   });
 }
 
-// 나머지 질문/정답/패스턴 함수는 이전과 동일하게 유지하되 인원수(maxPlayers)만 변수로 사용
 async function passTurn() {
   const doc = await gameDoc.get();
   const data = doc.data();
@@ -153,7 +145,7 @@ document.getElementById('sendAnswerBtn').addEventListener('click', () => {
   gameDoc.get().then(doc => {
     const data = doc.data();
     if (answer === data.words[myRole]) {
-      const newSolved = data.solved || new Array(maxPlayers).fill(false);
+      const newSolved = data.solved;
       newSolved[myRole] = true;
       gameDoc.update({ solved: newSolved, chat: firebase.firestore.FieldValue.arrayUnion(`🎉 ${myName} 정답 [${answer}]!`) });
       passTurn();
