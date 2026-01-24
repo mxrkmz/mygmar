@@ -1,60 +1,69 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>내 이름을 맞춰봐</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<meta charset="UTF-8">
+<title>내 이름을 맞춰봐</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<style>
+body{font-family:sans-serif;background:#f2f2f2}
+.container{max-width:400px;margin:auto;background:#fff;padding:15px;border-radius:10px}
+button{margin:3px;padding:6px 12px}
+#chatBox{height:200px;border:1px solid #ccc;overflow-y:auto;margin:10px 0;padding:5px}
+table{border-collapse:collapse;margin:10px 0}
+td,th{border:1px solid #ccc;padding:5px;text-align:center}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>내 이름을 맞춰봐 ~</h1>
-    <div id="modeScreen">
-      <p>게임 인원을 선택해주세요</p>
-      <button class="mode-btn" data-max="2">2인용</button>
-      <button class="mode-btn" data-max="3">3인용</button>
-    </div>
-    <div id="setupScreen" style="display:none;">
-      <p>플레이어를 선택해주세요</p>
-      <div id="roleButtons"></div>
-    </div>
-    <div id="nameScreen" style="display:none;">
-      <p>이름을 입력해주세요</p>
-      <input type="text" id="userName" placeholder="이름 입력">
-      <button id="saveNameBtn">확인</button>
-    </div>
-    <div id="wordScreen" style="display:none;">
-      <h2 id="wordTitle"></h2>
-      <input type="text" id="secretWord" placeholder="제시어 입력">
-      <button id="saveWordBtn">제시어 저장</button>
-    </div>
-    <div id="gameScreen" style="display:none;">
-      <div id="turnIndicator" style="padding:10px; margin-bottom:10px; background:#fff3cd; border:1px solid #ffeeba; font-weight:bold; text-align:center;">
-        게임 준비 중...
-      </div>
-      <table id="statusTable" style="width:100%; border-collapse:collapse; margin-bottom:10px; text-align:center; border:1px solid #ccc;">
-        <tr id="headerRow" style="background:#eee;"></tr>
-        <tr id="statusRow"></tr>
-      </table>
-      <div id="chatBox" style="height:250px; border:1px solid #ccc; overflow-y:auto; margin-bottom:10px; padding:10px; background:#fff;"></div>
-      <div id="inputArea">
-        <div style="margin-bottom:10px;">
-          <input type="text" id="questionInput" placeholder="질문을 입력하세요" style="width:70%;">
-          <button id="sendQuestionBtn" style="width:25%;">질문</button>
-        </div>
-        <div style="margin-bottom:10px;">
-          <input type="text" id="answerInput" placeholder="내 정답 맞히기" style="width:70%;">
-          <button id="sendAnswerBtn" style="width:25%;">정답확인</button>
-        </div>
-      </div>
-      <div id="resetArea" style="margin-top:20px; padding:10px; background:#f9f9f9; border:1px dashed #bbb; text-align:center;">
-        <p id="resetStatus" style="font-size:12px; margin-bottom:5px;">언제든 다시하기를 요청할 수 있습니다.</p>
-        <button id="resetBtn">게임 다시하기</button>
-      </div>
-    </div>
-  </div>
-  <script src="script.js"></script>
+
+<div class="container">
+<h1>내 이름을 맞춰봐 🎮</h1>
+
+<div id="modeScreen">
+  <p>모드 선택</p>
+  <button class="mode-btn" data-max="1">1인용</button>
+  <button class="mode-btn" data-max="2">2인용</button>
+  <button class="mode-btn" data-max="3">3인용</button>
+  <button class="mode-btn" data-max="4">4인용</button>
+</div>
+
+<div id="setupScreen" style="display:none;">
+  <p>플레이어 선택</p>
+  <div id="roleButtons"></div>
+</div>
+
+<div id="nameScreen" style="display:none;">
+  <input id="userName" placeholder="이름 입력">
+  <button id="saveNameBtn">확인</button>
+</div>
+
+<div id="wordScreen" style="display:none;">
+  <h3 id="wordTitle"></h3>
+  <input id="secretWord" placeholder="내 제시어 입력">
+  <button id="saveWordBtn">저장</button>
+</div>
+
+<div id="gameScreen" style="display:none;">
+  <div id="turnIndicator"></div>
+  <table width="100%">
+    <tr id="headerRow"></tr>
+    <tr id="statusRow"></tr>
+  </table>
+
+  <div id="chatBox"></div>
+
+  <input id="questionInput" placeholder="질문">
+  <button id="sendQuestionBtn">질문</button><br>
+
+  <input id="answerInput" placeholder="정답 입력">
+  <button id="sendAnswerBtn">정답 확인</button>
+</div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
