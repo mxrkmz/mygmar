@@ -44,16 +44,22 @@
         <tr id="statusRow"></tr>
       </table>
       <div id="chatBox" style="height:250px; border:1px solid #ccc; overflow-y:auto; margin-bottom:10px; padding:10px; background:#fff;"></div>
+      
       <div id="inputArea">
-        <div style="margin-bottom:10px;">
-          <input type="text" id="questionInput" placeholder="질문을 입력하세요" style="width:70%;">
-          <button id="sendQuestionBtn" style="width:25%;">질문</button>
+        <div style="margin-bottom:8px; display: flex; gap: 5px;">
+          <input type="text" id="questionInput" placeholder="[질문] 내 차례에 질문하기" style="flex: 3; padding: 8px;">
+          <button id="sendQuestionBtn" style="flex: 1; background: #e7f3ff; border: 1px solid #b3d7ff;">질문</button>
         </div>
-        <div style="margin-bottom:10px;">
-          <input type="text" id="answerInput" placeholder="내 정답 맞히기" style="width:70%;">
-          <button id="sendAnswerBtn" style="width:25%;">정답확인</button>
+        <div style="margin-bottom:8px; display: flex; gap: 5px;">
+          <input type="text" id="replyInput" placeholder="[답변] 질문에 대답해주기" style="flex: 3; padding: 8px;">
+          <button id="sendReplyBtn" style="flex: 1; background: #f0f0f0; border: 1px solid #ccc;">답변</button>
+        </div>
+        <div style="display: flex; gap: 5px;">
+          <input type="text" id="answerInput" placeholder="[정답] 내 단어 맞히기" style="flex: 3; padding: 8px; border: 2px solid #ffccd5;">
+          <button id="sendAnswerBtn" style="flex: 1; background: #ffe3e3; border: 1px solid #ffb3b3; font-weight: bold;">정답확인</button>
         </div>
       </div>
+
       <div id="resetArea" style="margin-top:20px; padding:10px; background:#f9f9f9; border:1px dashed #bbb; text-align:center;">
         <p id="resetStatus" style="font-size:12px; margin-bottom:5px;">초기화 투표</p>
         <button id="resetBtn">게임 다시하기</button>
