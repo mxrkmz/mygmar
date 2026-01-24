@@ -24,10 +24,13 @@ h1 {
   color: #333;
 }
 
-/* 입력창 확대 방지 핵심: 폰트 크기 16px */
+/* 디자인은 이전처럼 소박하게, 폰트는 확대 방지를 위해 16px */
 input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
   font-size: 16px !important; 
-  border: 1px solid #ddd;
+  padding: 10px;
+  border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
 }
@@ -39,11 +42,11 @@ button {
   padding: 8px;
 }
 
-#chatBox {
-  font-size: 14px;
-}
-
 .mode-btn {
   padding: 10px 20px;
   background-color: #eee;
+}
+
+#chatBox {
+  font-size: 14px;
 }
